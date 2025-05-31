@@ -1,0 +1,69 @@
+﻿@model IEnumerable<MyCarShop.Models.DomainModels.Purchase>
+
+@{
+  ViewData["Title"] = "ShowUserInvoices";
+}
+
+<h1>All User Invoices</h1>
+@if (ViewBag.PurchaseMessage is not null)
+{
+  <div class="alert alert-success">ViewBag.PurchaseMessage</div>
+}
+@if (Model.Any())
+{
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>
+          @Html.DisplayNameFor(model => model.Car.Brand)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Car.Model)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Car.Year)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.PurchaseDate)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Total)
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var item in Model)
+      {
+        <tr>
+          <td>
+            @Html.DisplayFor(modelItem => item.Car.Brand)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.Car.Model)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.Car.Year)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.PurchaseDate)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.Total)
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+else
+{
+  <div class="alert alert-info">
+    You don't have any invoice.
+  </div>
+}

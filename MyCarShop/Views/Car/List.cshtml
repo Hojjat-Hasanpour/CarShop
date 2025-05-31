@@ -1,0 +1,50 @@
+﻿@model MyCarShop.Models.ViewModels.CarsListViewModel
+@{
+  ViewBag.Title = "Car List";
+  // var carTypes = ViewBag.CarTypes as string[];
+}
+
+<h1>Car List</h1>
+<div class="row">
+  <div class="col-md-2">
+    @if (Model.CarTypes.Any())
+    {
+      <ul class="list-group">
+        @foreach (var type in Model.CarTypes)
+        {
+          if (type is not null)
+          {
+          <li class="list-group-item">
+            <a asp-controller="Car" asp-action="List" asp-route-brand="@type" class="nav-link">@type</a>
+          </li>
+          }
+        }
+      </ul>
+    }
+  </div>
+  <div class="col-md-10">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      @foreach (var item in Model.Cars)
+      {
+      <div class="col">
+        <div class="card h-100">
+          <img src="/images/@item.ImageFileName" class="card-img-top" alt="@item.Brand">
+          <div class="card-body">
+            <h5 class="card-title">@item.Brand</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Model: @item.Model</li>
+              <li class="list-group-item">Car Type: @item.CarType</li>
+              <li class="list-group-item">Price: @item.Price?.ToString("C")</li>
+              <li class="list-group-item">Color: @item.Color</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+              <a class="btn btn-outline-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@item.Id">Add to Cart</a>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    
+  </div>
+</div>

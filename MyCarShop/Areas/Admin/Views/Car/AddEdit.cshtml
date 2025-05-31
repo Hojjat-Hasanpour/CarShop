@@ -1,0 +1,66 @@
+﻿@model MyCarShop.Models.DomainModels.Car
+@{
+  ViewBag.Title = "Admin Car Add/Edit";
+}
+<h1 class="text-center">Admin Car Add/Edit</h1>
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-7 col-11 mx-auto py-3 border border-success border-2 rounded rounded-3">
+    <form asp-area="Admin" asp-controller="Car" asp-action="AddEdit" method="post" enctype="multipart/form-data">
+      <div class="form-floating mb-3">
+        <input asp-for="Brand" class="form-control" placeholder="Enter Brand">
+        <label asp-for="Brand">Brand</label>
+        <span asp-validation-for="Brand" class="text-danger"></span>
+      </div>
+      <div class="form-floating mb-3">
+        <input asp-for="Model" class="form-control" placeholder="Enter Model">
+        <label asp-for="Model">Model</label>
+        <span asp-validation-for="Model" class="text-danger"></span>
+      </div>
+      <div class="form-floating mb-3">
+        <input asp-for="Year" class="form-control" placeholder="Enter Year">
+        <label asp-for="Year">Year</label>
+        <span asp-validation-for="Year" class="text-danger"></span>
+      </div>
+      <div class="form-floating mb-3">
+        <input asp-for="CarType" class="form-control" placeholder="Enter Type">
+        <label asp-for="CarType">Type</label>
+        <span asp-validation-for="CarType" class="text-danger"></span>
+      </div>
+      <div class="form-floating mb-3">
+        <input asp-for="Price" class="form-control" placeholder="Enter Price">
+        <label asp-for="Price">Price</label>
+        <span asp-validation-for="Price" class="text-danger"></span>
+      </div>
+      <div class="form-floating mb-3">
+        <input asp-for="Color" class="form-control" placeholder="Enter Color">
+        <label asp-for="Color">Color</label>
+        <span asp-validation-for="Color" class="text-danger"></span>
+      </div>
+      @{
+        var imagePath = "/images/" + (Model.ImageFileName ?? "TempCar.jpg");
+      }
+      <div class="d-flex justify-content-center">
+        <img class="img-thumbnail image-fluid" src="@imagePath" id="imagePreview" class="card-img-top" alt="@Model.Brand" width="200px">
+      </div>
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Upload Car Image:</label>
+        <input class="form-control" type="file" name="imageUpload" id="formFile">
+      </div>
+      <input type="hidden" asp-for="ImageFileName" value="@Model.ImageFileName"/>
+      <button type="submit" class="btn btn-success">Save</button>
+      <a class="btn btn-outline-primary" asp-area="Admin" asp-controller="Car" asp-action="List">Cancel</a>
+    </form>
+  </div>
+</div>
+
+@section AdminScripts
+{
+  <script>
+    formFile.onchange = evt => {
+      const [file] = formFile.files
+      if (file) {
+        imagePreview.src = URL.createObjectURL(file)
+      }
+    }
+  </script>
+}

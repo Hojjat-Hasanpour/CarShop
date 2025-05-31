@@ -1,0 +1,116 @@
+﻿@model MyCarShop.Models.ViewModels.ShoppingCartViewModel
+@{
+  ViewBag.Title = "Shopping Cart";
+}
+<h1>ShoppingCart</h1>
+@if (ViewBag.CartMessage != null)
+{
+  <div class="alert alert-success">@ViewBag.CartMessage</div>
+}
+@if (Model.CartItems.Any())
+{
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Brand</th>
+        <th>Model</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>SubTotal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var item in Model.CartItems)
+      {
+        <tr>
+          <td>@item.Car.Brand</td>
+          <td>@item.Car.Model</td>
+          <td>@item.Car.Price</td>
+          <td>@item.Quantity</td>
+          <td>@((item.Car.Price * item.Quantity)?.ToString("C"))</td>
+          <td>
+            @* <input type="hidden" value="@item.Car.Id" /> *@
+            <a class="btn btn-outline-success" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@item.Car.Id"><i class="bi bi-plus-circle"></i> Add </a>
+            <a class="btn btn-outline-danger" asp-controller="ShoppingCart" asp-action="RemoveItem" asp-route-id="@item.Car.Id"><i class="bi bi-dash-circle"></i> Remove </a>
+          </td>
+        </tr>
+      }
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="bg-primary fw-bold text-white">Total:</td>
+        <td class="bg-primary fw-bold text-white">@Model.TotalPrice?.ToString("C")</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Modal">
+    Purchase
+  </button>
+  <a class="btn btn-outline-danger" asp-area="" asp-controller="ShoppingCart" asp-action="RemoveAllItems">Remove All Items</a>
+
+}
+else
+{
+  <div class="alert alert-info">
+    <p>Shopping Cart is empty!</p>
+    <p>Please use this <a asp-controller="Car" asp-action="List" asp-route-brand="all" class="alert-link">link</a> to view the cars.</p>
+  </div>
+}
+<a class="btn btn-outline-primary" asp-area="" asp-controller="Car" asp-action="List" asp-route-brand="all">View Car List</a>
+
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="ModalLabel" data-bs-backdrop="static" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Finalize Purchase</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Are you sure about your purchase?</h5>
+        <hr />
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Brand</th>
+              <th>Model</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>SubTotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+              <tr>
+                <td>@item.Car.Brand</td>
+                <td>@item.Car.Model</td>
+                <td>@item.Car.Price</td>
+                <td>@item.Quantity</td>
+                <td>@((item.Car.Price * item.Quantity)?.ToString("C"))</td>
+              </tr>
+            }
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="bg-primary fw-bold text-white">Total:</td>
+              <td class="bg-primary fw-bold text-white">@Model.TotalPrice?.ToString("C")</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+        <form asp-action="PurchaseItems" method="post">
+          <button type="submit" class="btn btn-success">Purchase</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
