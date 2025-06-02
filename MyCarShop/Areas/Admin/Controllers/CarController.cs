@@ -54,13 +54,13 @@ namespace MyCarShop.Areas.Admin.Controllers
 
             if (imageUpload != null)
             {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
                 if (car.Id == 0)
                 {
                     car.ImageFileName = Guid.NewGuid() + "_" + imageUpload.FileName;
                 }
                 else
                 {
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
                     string uniqueFileName = Guid.NewGuid() + "_" + imageUpload.FileName;
                     if (car.ImageFileName != "TempCar.jpg")
                     {
@@ -70,12 +70,12 @@ namespace MyCarShop.Areas.Admin.Controllers
                             System.IO.File.Delete(existingFilePath);
                         }
                     }
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    await using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await imageUpload.CopyToAsync(fileStream);
-                    }
                     car.ImageFileName = uniqueFileName;
+                }
+                string filePath = Path.Combine(uploadsFolder, car.ImageFileName);
+                await using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await imageUpload.CopyToAsync(fileStream);
                 }
             }
             else
@@ -106,6 +106,15 @@ namespace MyCarShop.Areas.Admin.Controllers
             var car = await _context.Cars.FindAsync(id);
             if (car is null)
                 return NotFound();
+            if (car.ImageFileName != "TempCar.jpg")
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                string existingFilePath = Path.Combine(uploadsFolder, car.ImageFileName!);
+                if (System.IO.File.Exists(existingFilePath))
+                {
+                    System.IO.File.Delete(existingFilePath);
+                }
+            }
             _context.Cars.Remove(car);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(List));
